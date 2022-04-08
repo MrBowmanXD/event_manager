@@ -45,10 +45,29 @@ erb_template = ERB.new template_letter
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
+  
   zipcode = clean_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
 
   form_letter = erb_template.result(binding)
 
-  save_thank_you_letter(id,form_letter)
+  #save_thank_you_letter(id,form_letter) to uncomment in a later phase
+
+  homephone_array = row[:homephone].split("")
+  homephone_numbers = homephone_array.reject do |char|
+    char == '-' || char == '(' || char == ')' || char == '.' || char == ' '
+  end
+  homephone_string = homephone_numbers.join("")
+  if homephone_string.length < 10 || homephone_string.length > 11
+    puts "Bad number"
+    puts homephone_string
+  elsif homephone_string.length == 10
+    puts "Good number"
+    puts homephone_string
+  elsif homephone_string.length == 11 && homephone_string[0] == 1
+    homephone_string = homephone_string.delete_prefix("1")
+    puts "Now it's a good number"
+    puts homephone_string
+  end 
 end
+
