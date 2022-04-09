@@ -21,6 +21,25 @@ def legislators_by_zipcode(zip)
   end
 end
 
+def homephone_method(row)
+  homephone_array = row[:homephone].split("")
+  homephone_numbers = homephone_array.reject do |char|
+    char == '-' || char == '(' || char == ')' || char == '.' || char == ' '
+  end
+  homephone_string = homephone_numbers.join("")
+  if homephone_string.length < 10 || homephone_string.length > 11
+    puts "Bad number"
+    puts homephone_string
+  elsif homephone_string.length == 10
+    puts "Good number"
+    puts homephone_string
+  elsif homephone_string.length == 11 && homephone_string[0] == 1
+    homephone_string = homephone_string.delete_prefix("1")
+    puts "Now it's a good number"
+    puts homephone_string
+  end 
+end
+
 def save_thank_you_letter(id,form_letter)
   Dir.mkdir('output') unless Dir.exist?('output')
 
@@ -52,22 +71,8 @@ contents.each do |row|
   form_letter = erb_template.result(binding)
 
   #save_thank_you_letter(id,form_letter) to uncomment in a later phase
+  # homephone_method(row) solution to first assignment
+  puts row
 
-  homephone_array = row[:homephone].split("")
-  homephone_numbers = homephone_array.reject do |char|
-    char == '-' || char == '(' || char == ')' || char == '.' || char == ' '
-  end
-  homephone_string = homephone_numbers.join("")
-  if homephone_string.length < 10 || homephone_string.length > 11
-    puts "Bad number"
-    puts homephone_string
-  elsif homephone_string.length == 10
-    puts "Good number"
-    puts homephone_string
-  elsif homephone_string.length == 11 && homephone_string[0] == 1
-    homephone_string = homephone_string.delete_prefix("1")
-    puts "Now it's a good number"
-    puts homephone_string
-  end 
 end
 
